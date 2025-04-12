@@ -1,0 +1,7 @@
+{
+  "name": "loundryApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
