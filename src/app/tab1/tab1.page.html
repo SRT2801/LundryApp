@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 1
+      Prueba de Conexión
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,9 +9,51 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
+      <ion-title size="large">Prueba de Conexión</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <div class="ion-padding">
+    <h2>Estado de la conexión con el backend:</h2>
+
+    <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+
+    <ion-card *ngIf="connectionError">
+      <ion-card-header>
+        <ion-card-title>Error de conexión</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>{{ connectionError }}</p>
+        <p>Asegúrate de que:</p>
+        <ul>
+          <li>El servidor backend está ejecutándose en http://localhost:3000</li>
+          <li>No hay problemas de CORS en el servidor</li>
+          <li>La URL en environment.ts es correcta</li>
+        </ul>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngIf="services.length > 0">
+      <ion-card-header>
+        <ion-card-title>¡Conexión exitosa!</ion-card-title>
+        <ion-card-subtitle>Servicios recibidos: {{ services.length }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let service of services">
+            <ion-label>
+              <h2>{{ service.name }}</h2>
+              <p>{{ service.description }}</p>
+              <p>Precio: ${{ service.price }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-button expand="block" (click)="testBackendConnection()">
+      Probar conexión nuevamente
+    </ion-button>
+  </div>
+
 </ion-content>
