@@ -1,0 +1,17 @@
+<div class="custom-input-container">
+  <ion-item [class.ion-invalid]="isInvalid" [class.ion-touched]="isInvalid">
+    <ion-label position="floating" *ngIf="label">{{ label }} <span *ngIf="required" class="required">*</span></ion-label>
+    <ion-input
+      [type]="type"
+      [placeholder]="placeholder"
+      [value]="value"
+      [disabled]="isDisabled"
+      [autocomplete]="autocomplete"
+      (ionInput)="onInputChange($event)"
+      (ionBlur)="onTouched()">
+    </ion-input>
+  </ion-item>
+  <div class="error-message" *ngIf="isInvalid && errorMessage">
+    {{ errorMessage }}
+  </div>
+</div>

@@ -1,0 +1,25 @@
+.custom-input-container {
+  margin-bottom: 10px;
+
+  .required {
+    color: var(--ion-color-danger);
+  }
+
+  .error-message {
+    color: var(--ion-color-danger);
+    font-size: 12px;
+    margin: 4px 0 0 16px;
+  }
+
+  ion-item {
+    --border-color: transparent;
+    --highlight-background: var(--ion-color-primary);
+    --background: var(--ion-color-light);
+    --border-radius: 8px;
+    margin-bottom: 5px;
+  }
+
+  ion-item.ion-invalid.ion-touched {
+    --border-color: var(--ion-color-danger);
+  }
+}
