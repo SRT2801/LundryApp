@@ -1,4 +1,3 @@
-// En tu proyecto Ionic: src/app/services/auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -15,7 +14,7 @@ export interface AuthResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private apiUrl = environment.apiUrl;
@@ -46,34 +45,42 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, {
-      email,
-      password
-    }).pipe(
-      tap(user => {
-        this._user.next(user);
-        Preferences.set({
-          key: 'authData',
-          value: JSON.stringify(user)
-        });
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/auth/login`, {
+        email,
+        password,
       })
-    );
+      .pipe(
+        tap((user) => {
+          this._user.next(user);
+          Preferences.set({
+            key: 'authData',
+            value: JSON.stringify(user),
+          });
+        })
+      );
   }
 
-  register(name: string, email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, {
-      name,
-      email,
-      password
-    }).pipe(
-      tap(user => {
-        this._user.next(user);
-        Preferences.set({
-          key: 'authData',
-          value: JSON.stringify(user)
-        });
+  register(
+    name: string,
+    email: string,
+    password: string
+  ): Observable<AuthResponse> {
+    return this.http
+      .post<AuthResponse>(`${this.apiUrl}/auth/register`, {
+        name,
+        email,
+        password,
       })
-    );
+      .pipe(
+        tap((user) => {
+          this._user.next(user);
+          Preferences.set({
+            key: 'authData',
+            value: JSON.stringify(user),
+          });
+        })
+      );
   }
 
   logout(): Promise<void> {
