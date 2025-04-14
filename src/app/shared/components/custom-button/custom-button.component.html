@@ -1,0 +1,19 @@
+<ion-button
+  [type]="type"
+  [expand]="expand"
+  [disabled]="disabled || loading"
+  [color]="color"
+  [shape]="shape"
+  [fill]="fill"
+  [size]="size === 'small' ? 'small' : size === 'large' ? 'large' : undefined"
+  (click)="onClick($event)"
+  class="custom-button"
+  [class]="size">
+
+  <ion-icon *ngIf="iconStart && !loading" [name]="iconStart" slot="start"></ion-icon>
+
+  <ion-spinner *ngIf="loading" name="crescent" class="button-spinner"></ion-spinner>
+  <span *ngIf="!loading">{{ text }}</span>
+
+  <ion-icon *ngIf="iconEnd && !loading" [name]="iconEnd" slot="end"></ion-icon>
+</ion-button>
