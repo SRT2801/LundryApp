@@ -1,59 +1,53 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Prueba de Conexión
+      Mis Órdenes
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Prueba de Conexión</ion-title>
+      <ion-title size="large">Mis Órdenes</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div class="ion-padding">
-    <h2>Estado de la conexión con el backend:</h2>
 
-    <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
-
-    <ion-card *ngIf="connectionError">
-      <ion-card-header>
-        <ion-card-title>Error de conexión</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p>{{ connectionError }}</p>
-        <p>Asegúrate de que:</p>
-        <ul>
-          <li>El servidor backend está ejecutándose en http://localhost:3000</li>
-          <li>No hay problemas de CORS en el servidor</li>
-          <li>La URL en environment.ts es correcta</li>
-        </ul>
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card *ngIf="services.length > 0">
-      <ion-card-header>
-        <ion-card-title>¡Conexión exitosa!</ion-card-title>
-        <ion-card-subtitle>Servicios recibidos: {{ services.length }}</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-list>
-          <ion-item *ngFor="let service of services">
-            <ion-label>
-              <h2>{{ service.name }}</h2>
-              <p>{{ service.description }}</p>
-              <p>Precio: ${{ service.price }}</p>
-            </ion-label>
-          </ion-item>
-        </ion-list>
-      </ion-card-content>
-    </ion-card>
-
-    <ion-button expand="block" (click)="testBackendConnection()">
-      Probar conexión nuevamente
-    </ion-button>
+  <div *ngIf="isLoading" class="ion-text-center ion-padding">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando órdenes...</p>
   </div>
 
+
+  <div *ngIf="errorMessage && !isLoading" class="ion-padding ion-text-center">
+    <ion-text color="danger">{{ errorMessage }}</ion-text>
+    <ion-button fill="clear" (click)="loadOrders()">Reintentar</ion-button>
+  </div>
+
+
+  <div *ngIf="!isLoading && !errorMessage">
+    <div *ngIf="orders.length === 0" class="ion-padding ion-text-center">
+      <p>Aún no tienes órdenes creadas.</p>
+    </div>
+
+
+    <app-card *ngFor="let order of orders" [cardTitle]="'Orden #' + order.id.substring(0, 8) + '...'"
+      [cardSubtitle]="'Estado: ' + order.status + ' - Creada: ' + (order.createdAt | date:'short')"
+      [content]="'Items: ' + order.items.length + ' - Total: ' + (order.total | currency:'USD':'symbol':'1.2-2')">
+
+
+    </app-card>
+  </div>
+
+  <!-- Botón flotante para crear nueva orden -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button >
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

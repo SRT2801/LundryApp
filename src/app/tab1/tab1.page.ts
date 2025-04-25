@@ -1,45 +1,60 @@
 import { Component, OnInit } from '@angular/core';
-import { ServiceService } from '../core/services/service/Service.service';
+import { SharedModule } from '../shared/shared/shared.module';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Order, OrderService } from '../core/services/order/order.service';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [SharedModule],
 })
 export class Tab1Page implements OnInit {
-  services: any[] = [];
-  connectionError: string | null = null;
+  orders: Order[] = [];
   isLoading = false;
+  errorMessage: string | null = null;
 
-  constructor(private serviceService: ServiceService) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private orderService: OrderService,
+    private router: Router
+  ) {}
 
-  async ngOnInit() {
-    this.testBackendConnection();
+  ngOnInit(): void {
+    this.loadOrders();
   }
 
-  async testBackendConnection() {
+  async loadOrders() {
     this.isLoading = true;
+    this.errorMessage = null;
+    this.orders = [];
+
     try {
-      const servicesObservable = await this.serviceService.getServices();
-      servicesObservable.subscribe({
-        next: (data) => {
-          console.log('Datos recibidos del backend:', data);
-          this.services = data;
+      const ordersObservable = await this.orderService.getCustomerOrders();
+      ordersObservable.subscribe({
+        next: (orders) => {
+          this.orders = orders;
           this.isLoading = false;
+          console.log('Orders loaded:', this.orders);
         },
         error: (error) => {
-          console.error('Error al conectar con el backend:', error);
-          this.connectionError = `Error de conexión: ${
-            error.message || 'Desconocido'
-          }`;
           this.isLoading = false;
+          this.errorMessage = error.message;
         },
       });
-    } catch (err) {
-      console.error('Error al iniciar la petición:', err);
-      this.connectionError = `Error al iniciar la petición: ${err}`;
+    } catch (error) {
+      console.error('Error loading orders:', error);
       this.isLoading = false;
+      this.errorMessage = 'Failed to load orders. Please try again later.';
     }
+  }
+
+  handleRefresh(event: any) {
+    this.loadOrders();
+    setTimeout(() => {
+      event.target.complete();
+    });
   }
 }
