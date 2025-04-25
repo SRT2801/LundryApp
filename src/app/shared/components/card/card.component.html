@@ -1,0 +1,13 @@
+<ion-card>
+  <img *ngIf="imageUrl" [src]="imageUrl" />
+  <ion-card-header>
+    <ion-card-title *ngIf="cardTitle">{{ cardTitle }}</ion-card-title>
+    <ion-card-subtitle *ngIf="cardSubtitle">{{ cardSubtitle }}</ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content *ngIf="content">
+    {{ content }}
+  </ion-card-content>
+
+
+</ion-card>
